@@ -4,8 +4,6 @@
 #LANGUAGE:English
 #GENRE:8bit
 #MP3:https://www.youtube.com/watch?v=8xrZjrQ3GOQ
-#COVER:Pornophonique - Space Invaders [CO].jpg
-#BACKGROUND:Pornophonique - Space Invaders [BG].jpg
 #BPM:315,08
 #GAP:2720
 : 1 4 2 E
