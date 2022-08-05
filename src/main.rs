@@ -1,35 +1,33 @@
 //! Handles requests for `ascii-star` data.
-//! 
+//!
 //! This server can serve the `.txt` files containing the lyrics and `.mp3` files containing the
 //! actual song.
 //!
 //! It also supports searching for songs.
-#![feature(proc_macro_hygiene, decl_macro)]
 
 mod configuration;
 
-use rocket::{get, routes, response::NamedFile};
-use rocket_contrib::{json, json::JsonValue};
+use rocket::{get, routes, fs::NamedFile, launch, serde::json::{Value as JsonValue, json}};
 use std::{io::Read, fs::{read_dir, File}, path::{PathBuf, Path}};
 
 /// Returns an mp3 file at the specified path.
 #[get("/mp3/<path..>")]
-fn get_mp3(path: PathBuf) -> Option<NamedFile> {
+async fn get_mp3(path: PathBuf) -> Option<NamedFile> {
     let mut file_path = PathBuf::from(crate::configuration::MP3_PATH);
 
     file_path.push(path);
 
-    NamedFile::open(file_path).ok()
+    NamedFile::open(file_path).await.ok()
 }
 
 /// Returns a song `.txt` file at the specified path.
 #[get("/song/<path..>")]
-fn get_song_txt(path: PathBuf) -> Option<NamedFile> {
+async fn get_song_txt(path: PathBuf) -> Option<NamedFile> {
     let mut file_path = PathBuf::from(crate::configuration::SONG_PATH);
 
     file_path.push(path);
 
-    NamedFile::open(file_path).ok()
+    NamedFile::open(file_path).await.ok()
 }
 
 /// Returns all the files that match the search.
@@ -98,13 +96,14 @@ fn matches_header(header: &ultrastar_txt::Header, word: &str) -> bool {
 }
 
 /// Starts the server.
-fn main() {
-    rocket::ignite()
+#[launch]
+fn rocket() -> _ {
+    rocket::build()
         .mount("/",
                routes![
                    get_mp3,
                    get_song_txt,
                    search
                ]
-        ).launch();
+        )
 }

@@ -5,6 +5,5 @@ authors = ["aticu <15schnic@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-rocket = "0.4"
-rocket_contrib = "0.4"
+rocket = { version = "0.5.0-rc.2", features = ["json"] }
 ultrastar-txt = { git = "https://github.com/Lordakius/ultrastar-txt.git" }
